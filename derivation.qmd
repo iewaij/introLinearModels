@@ -1,0 +1,257 @@
+---
+title: "Linear Regression: Derivation"
+author: "Jiawei Li"
+editor:
+  render-on-save: true
+---
+
+# Introduction
+
+A model is a simplified representation of a more complex real-world system that helps us to better understand and analyse that system. A common type of model is the linear model, in which a dependent variable (or target) can be described by a linear combination of a set of independent variables (or features). This linear relationship makes it easy to derive and interpret the model, making it a basic and universal tool. In this seminar, we will study the derivation of linear regression from different perspectives. With a good command of linear algebra and calculus, the process becomes clear and opens the door to more advanced topics.
+
+# Linear Models in One Dimension
+
+Let us start with a simple model to explain the housing prices. One way to model housing prices is using a scalar, $\beta$, times housing area:
+
+$$
+\text{price} = \beta \times \text{area}
+$$
+
+We use $y$ to denote the actual price, $x$ to denote the area, $\beta$ is the parameter (or the scalar in this case), $\epsilon$ is the irreducible error that collects all the unconsidered parts of our data:
+
+$$
+y = \beta x + \epsilon
+$$
+
+
+We use superscript $(i)$ to denote the index of the data. For example, the first row of data is:
+
+$$
+y^{(0)} = \beta x^{(0)} + \epsilon^{(0)}
+$$
+
+And $\hat{y}$ is the predicted price and $\hat{\beta}$ is the predicted parameter:
+
+$$
+\hat{y} = \hat{\beta} x
+$$
+
+## Least Squares
+
+How could we tell that this scalar is better than that scalar? This is where loss function, a.k.a. cost function, comes into the play. We conveniently define the sum of squared errors as our cost function:
+
+$$
+J(\hat{\beta})
+= \frac{1}{n} \sum_{i=1}^n\left[y^{(i)}-\hat{y}^{(i)}\right]^2
+= \frac{1}{n} \sum_{i=1}^n\left[y^{(i)}-\hat{\beta} x^{(i)}\right]^2
+$$
+
+You will understand why this function makes sense in the later part of the seminar series. The solution using least squares is the same as using maximum likelihood estimation with some assumptions on the error's distribution. The solution also has some good properties known as the Gauss-Markov theorme. Our goal is to find $\beta^*$ that minimizes this loss function, which is an optimization problem:
+
+$$
+\beta^*:=\underset{\hat{\beta}}{\operatorname{argmin}}\ J(\hat{\beta})
+$$
+
+## Optimization
+
+The first derivative tells about the slope of the function. The maximum or minimum occurs when $\frac{\partial f}{\partial x} = 0$. However, it is not guaranteed that the point where $\frac{\partial f}{\partial x} = 0$ is the maximum or minimum, which has to be further validated by the second derivative. The second derivative tells about the change in slope and whether $x$ is a maximum, minimum or inflection point. When $\frac{\partial f}{\partial x}=0$ and $\frac{\partial^2 f}{\partial x^2}>0$, the function is convex and there is a minimum at $x$. When $\frac{\partial f}{\partial x}=0$ and $\frac{\partial^2 f}{\partial x^2}<0$, the function is concave and there is a maximum at $x$.
+
+## First Derivative
+
+We can rewrite the loss function $J(\hat{\beta})$ in a more friendly format:
+
+$$
+J(\hat{\beta}) = \frac{1}{2} \sum_{i=1}^n\left[y^{(i)}-\hat{\beta} x^{(i)}\right]^2
+$$
+
+The first derivative of $J(\hat{\beta})$ becomes:
+
+$$
+\frac{\partial}{\partial \hat{\beta}} J(\hat{\beta}) = -\sum_{i=1}^n\left[y^{(i)}-\hat{\beta} x^{(i)}\right]x^{(i)}
+$$
+
+We can use gradient descent to reach the minimum of loss function by taking the steps towards the direction indicated by the first derivative. For linear regression, a solution can be directly calculated because the loss function is convex, which can be proved by the second derivative.
+
+## Second Derivative
+
+The second derivative of the loss function defines the convexity of the function:
+
+$$
+\frac{\partial^2}{\partial^2 \hat{\beta}} J(\hat{\beta}) = \sum_{i=1}^n \left[x^{(i)}\right]^2
+$$
+
+## Solution
+
+The second derivative of the loss function tells us that the loss function is convex globally. So, we can set first derivative to zero to get the global minimum.
+
+$$
+\begin{aligned}
+   \frac{\partial}{\partial \beta^*} J(\beta^*) &= 0 \\
+   \sum_{i=1}^n\left[y^{(i)}-\beta^* x^{(i)}\right] x^{(i)} &= 0 \\
+   \sum_{i=1}^n x^{(i)}y^{(i)} -\beta^* [x^{(i)}]^2 &= 0 \\
+   \sum_{i=1}^n x^{(i)}y^{(i)} &= \sum_{i=1}^n \beta^* [x^{(i)}]^2 \\
+   \beta^* &= \frac{\sum_{i=1}^n x^{(i)}y^{(i)}}{\sum_{i=1}^n [x^{(i)}]^2}  
+\end{aligned}
+$$
+
+# Linear Models in Higher Dimension
+
+In most cases, we incorporate intercept term and more independent variables into linear models. Thus, the model becomes high dimensional. For example, if we add an intercept to our model:
+
+$$
+\text{price} = \beta_0 + \beta_1 \times \text{area}
+$$
+
+We can rewrite $\beta$ as $\begin{bmatrix}
+   \beta_0 \\
+   \beta_1
+\end{bmatrix}$, the feature $X$ as $\begin{bmatrix}
+   1 & x^{(0)} \\
+   1 & x^{(1)} \\
+   \vdots & \vdots   \\
+   1 & x^{(n)} \\
+\end{bmatrix}$, and the equation becomes:
+
+$$
+\hat{y} = X \hat{\beta}
+$$
+
+## Least Squares
+
+From [properties of matrix multiplication](https://www.khanacademy.org/math/precalculus/x9e81a4f98389efdf:matrices/x9e81a4f98389efdf:properties-of-matrix-multiplication/a/properties-of-matrix-multiplication), we know that $(AB)^\top=B^\top A^\top$ and $A(B+C) = AB + AC$. The loss function of linear regression can be written as follows, where $\frac{1}{2}$ is added for convenience:
+
+$$
+\begin{aligned}
+J(\hat{\beta}) &= \frac{1}{2} \left[ (\hat{y} - X \hat{\beta})^\top (\hat{y} - X \hat{\beta}) \right] \\
+&= \frac{1}{2} \left[(y - X\hat{\beta})^\top y - (y - X\hat{\beta})^\top X\hat{\beta} \right]\\
+&= \frac{1}{2} \left[y^\top y - (X\hat{\beta})^\top y - y^\top X\hat{\beta} + (X\hat{\beta})^\top X\hat{\beta} \right]\\
+&= \frac{1}{2} \left[y^\top y - \hat{\beta}^\top X^\top y - y^\top X\hat{\beta} + \hat{\beta}^\top X^\top X\hat{\beta} \right]
+\end{aligned}
+$$
+
+## Optimization
+
+Optimization in higher dimension is slightly more complicated than the one-dimensional case. However, the process is similiar. When we reach the maximum or minimum point, the first derivative is zero. To ensure that the point is the local maximum or minimum rather than a saddle point, we need the second derivative to show that the function is convex or concave.
+
+## First Derivative
+
+The gradient of a scalar-valued multivariable function, $f(x, y, \ldots)$, denoted $\nabla f$, packages all its partial derivative information into a vector. We call this vector Jacobian.
+
+$$
+\nabla f=\left[\begin{array}{c}
+\frac{\partial f}{\partial x} \\
+\frac{\partial f}{\partial y} \\
+\vdots
+\end{array}\right]
+$$
+
+The Jacobian of the loss function becomes:
+
+$$
+\begin{aligned}
+\nabla_{\hat{\beta}} J(\hat{\beta}) &=\nabla_{\hat{\beta}} \frac{1}{2} \left[y^\top y - \hat{\beta}^\top X^\top y - y^\top X\hat{\beta} + \hat{\beta}^\top X^\top X\hat{\beta} \right] \\
+\end{aligned}
+$$
+
+The first item $y^\top y$ can be ignored since it has nothing to do with $\beta$. The second and third term are both scalars and are the transposes of each other. Therefore, these two terms can be combined:
+
+$$
+\begin{aligned}
+\nabla_{\hat{\beta}} J(\hat{\beta}) &= \nabla_{\hat{\beta}} \frac{1}{2} \left[y^\top y - \hat{\beta}^\top X^\top y - y^\top X\hat{\beta} + \hat{\beta}^\top X^\top X\hat{\beta} \right] \\
+\nabla_{\hat{\beta}} J(\hat{\beta}) &= \nabla_{\hat{\beta}} \frac{1}{2} \left[- 2 (X^\top y)^\top \hat{\beta} + \hat{\beta}^\top X^\top X\hat{\beta} \right] \\
+\end{aligned}
+$$
+
+It is trivial to see that $\nabla_{\hat{\beta}} \left[ 2 (X^\top y)^\top \hat{\beta} \right] = 2 X^\top y$.
+
+For $\nabla_{\hat{\beta}} \left[ \hat{\beta}^\top X^\top X\hat{\beta} \right]$, suppose we have a symetric matrix $A=\begin{bmatrix}
+a_{11} & a_{12} \\
+a_{12} & a_{22}
+\end{bmatrix}$ in place of $X^\top X$. The original equation becomes $\hat{\beta}^\top A \hat{\beta}$, which can be decomposed into:
+
+$$
+\begin{aligned}
+\hat{\beta}^\top A \hat{\beta}
+=&
+\begin{bmatrix}
+\hat{\beta}_0 & \hat{\beta}_1
+\end{bmatrix}
+\begin{bmatrix}
+a_{11} & a_{12} \\
+a_{12} & a_{22}
+\end{bmatrix}
+\begin{bmatrix}
+\hat{\beta}_0 \\
+\hat{\beta}_1
+\end{bmatrix}\\
+=&
+\begin{bmatrix}
+\hat{\beta}_0 & \hat{\beta}_1
+\end{bmatrix}
+\begin{bmatrix}
+a_{11} \hat{\beta}_0 + a_{12} \hat{\beta}_1 \\
+a_{12} \hat{\beta}_0 + a_{22} \hat{\beta}_1
+\end{bmatrix}\\
+=& \hat{\beta}_0 (a_{11} \hat{\beta}_0+a_{12} \hat{\beta}_1) +\hat{\beta}_1 (a_{12} \hat{\beta}_0+a_{22} \hat{\beta}_1) \\
+=& a_{11} \hat{\beta}_0^2 + a_{22} \hat{\beta}_1^2+ 2 a_{12} \hat{\beta}_0 \hat{\beta}_1
+\end{aligned}
+$$
+
+The Jacobian of $\hat{\beta}^\top A \hat{\beta}$ is therefore:
+
+$$
+\nabla_{\hat{\beta}}\hat{\beta}^TA\hat{\beta} = 
+\begin{bmatrix}
+\frac{\partial \hat{\beta}^TA\hat{\beta}}{\partial \hat{\beta}_0}\\ 
+\frac{\partial \hat{\beta}^TA\hat{\beta}}{\partial \hat{\beta}_1}
+\end{bmatrix} = 
+\begin{bmatrix}
+2a_{11}\hat{\beta}_0 + 2a_{12}\hat{\beta}_1\\ 
+2a_{12}\hat{\beta}_0 + 2a_{22}\hat{\beta}_1
+\end{bmatrix} = 2A\hat{\beta}
+$$
+
+So, the Jacobian of $\hat{\beta}^\top X^\top X \hat{\beta}$ is $2X^\top X\hat{\beta}$. We have:
+
+$$
+\begin{aligned}
+\nabla_{\hat{\beta}} J(\hat{\beta}) &= \nabla_{\hat{\beta}} \frac{1}{2} \left[- 2 (X^\top y)^\top \hat{\beta} + \hat{\beta}^\top X^\top X\hat{\beta} \right] \\
+&= - X^\top y + X^\top X\hat{\beta}
+\end{aligned}
+$$
+
+## Second Derivative
+
+The Hessian matrix of a multivariable function, $f(x, y, \ldots)$, organizes all second partial derivatives into a matrix:
+
+$$
+\nabla^2 f=\left[\begin{array}{cccc}
+\frac{\partial^2 f}{\partial x^2} & \frac{\partial^2 f}{\partial x \partial y} & \cdots \\
+\frac{\partial^2 f}{\partial y \partial x} & \frac{\partial^2 f}{\partial y^2} & \cdots \\
+\vdots & \vdots & \ddots
+\end{array}\right]
+$$
+
+To show that the loss function is convex, you need to show that the Hessian matrix is positive semi-definite.
+
+$$
+\begin{aligned}
+\nabla_{\hat{\beta}}^2 J(\hat{\beta}) &= \nabla_{\hat{\beta}} \left[ \nabla_{\hat{\beta}} J(\hat{\beta}) \right] \\
+&= \nabla_{\hat{\beta}} \left[ - X^\top y  + X^\top X \hat{\beta} \right] \\
+&= X^\top X
+\end{aligned}
+$$
+
+For any matrix $X \in \mathbf{R}^{m \times n}$, $X^\top X$ is positive semi-definite. Therefore, $\nabla_{\hat{\beta}}^2 J(\hat{\beta})$ is also positive semi-definite and the loss function $J(\hat{\beta})$ is a convex function.
+
+## Solution
+
+A convex function reaches its global minimum when its first derivative, $\nabla_{\hat{\beta}} J(\hat{\beta})$, is zero. Therefore,
+
+$$
+\begin{aligned}
+\nabla_{\beta} J(\beta^*) &= 0 \\
+- X^\top y  + X^\top X \beta^* &= 0 \\
+\beta^* &= (X^\top X)^{-1}X^\top y
+\end{aligned}
+$$

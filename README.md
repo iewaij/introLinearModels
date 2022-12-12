@@ -6,4 +6,4 @@ This repository tracks my recent notes on linear models. I will cover its deriva
 
 The series of notes start with linear regression with only one parameter. With single parameter, it is relatively easy to show the big picture of least squares and optimization techniques. Then I will expand it to abstract (higher) dimensions using vector calculus. In the end, we can see a beautiful connection between these two dimensions.
 
-[Linear Regression: Derivation](derivation.md)
+[Linear Regression: Derivation](https://iewaij.quarto.pub/linear-regression-derivation/)
