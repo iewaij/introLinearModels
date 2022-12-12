@@ -7,7 +7,7 @@ editor:
 
 # Introduction
 
-A model is a simplified representation of a more complex real-world system that helps us to better understand and analyse that system. A common type of model is the linear model, in which a dependent variable (or target) can be described by a linear combination of a set of independent variables (or features). This linear relationship makes it easy to derive and interpret the model, making it a basic and universal tool. In this seminar, we will study the derivation of linear regression from different perspectives. With a good command of linear algebra and calculus, the process becomes clear and opens the door to more advanced topics.
+A model is a simplified representation of a more complex real-world system that helps us to better understand and analyse that system. A common type of model is the linear model, in which a output (or target, dependent variable) can be described by a linear combination of a set of inputs (or features, independent variales). This linear relationship makes it easy to derive and interpret the model, making it a basic and universal tool. With a good command of linear algebra and calculus, the process becomes clear and opens the door to more advanced topics.
 
 # Linear Models in One Dimension
 
@@ -42,8 +42,8 @@ How could we tell that this scalar is better than that scalar? This is where los
 
 $$
 J(\hat{\beta})
-= \frac{1}{n} \sum_{i=1}^n\left[y^{(i)}-\hat{y}^{(i)}\right]^2
-= \frac{1}{n} \sum_{i=1}^n\left[y^{(i)}-\hat{\beta} x^{(i)}\right]^2
+= \sum_{i=1}^n\left[y^{(i)}-\hat{y}^{(i)}\right]^2
+= \sum_{i=1}^n\left[y^{(i)}-\hat{\beta} x^{(i)}\right]^2
 $$
 
 You will understand why this function makes sense in the later part of the seminar series. The solution using least squares is the same as using maximum likelihood estimation with some assumptions on the error's distribution. The solution also has some good properties known as the Gauss-Markov theorme. Our goal is to find $\beta^*$ that minimizes this loss function, which is an optimization problem:
@@ -96,7 +96,7 @@ $$
 
 # Linear Models in Higher Dimension
 
-In most cases, we incorporate intercept term and more independent variables into linear models. Thus, the model becomes high dimensional. For example, if we add an intercept to our model:
+In most cases, we incorporate intercept term and more input variables into linear models. Thus, the model becomes high dimensional. For example, if we add an intercept to our model:
 
 $$
 \text{price} = \beta_0 + \beta_1 \times \text{area}
@@ -105,7 +105,7 @@ $$
 We can rewrite $\beta$ as $\begin{bmatrix}
    \beta_0 \\
    \beta_1
-\end{bmatrix}$, the feature $X$ as $\begin{bmatrix}
+\end{bmatrix}$, the input $X$ as $\begin{bmatrix}
    1 & x^{(0)} \\
    1 & x^{(1)} \\
    \vdots & \vdots   \\
